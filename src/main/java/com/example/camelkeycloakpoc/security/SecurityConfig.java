@@ -51,14 +51,12 @@ public class SecurityConfig {
             Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
             logger.info("JWT claims: {}", jwt.getClaims()); // Log para verificar os claims disponíveis
 
-            // Extraindo roles do campo "realm_access"
             Map<String, Object> realmAccess = jwt.getClaim("realm_access");
             if (realmAccess != null && realmAccess.containsKey("roles")) {
                 List<String> roles = (List<String>) realmAccess.get("roles");
                 roles.forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role)));
             }
 
-            // Log para verificar as roles extraídas
             logger.info("Authorities extraídas do JWT: {}", authorities);
 
             return authorities;
