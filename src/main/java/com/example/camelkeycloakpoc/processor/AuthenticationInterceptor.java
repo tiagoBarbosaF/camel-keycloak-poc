@@ -17,11 +17,11 @@ public class AuthenticationInterceptor implements Processor {
     public void process(Exchange exchange) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.isAuthenticated() && authentication.getCredentials() instanceof Jwt) {
-            String token = ((Jwt) authentication.getCredentials()).getTokenValue();
-            exchange.getIn().setHeader("Authorization", "Bearer " + token);
+        if (authentication != null && authentication.isAuthenticated()) {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            exchange.getIn().setHeader("Authorization", "Bearer " + jwt.getTokenValue());
 
-            logger.info("✅ Token JWT adicionado à requisição: {}", token);
+            logger.info("✅ Usuário autenticado: {}", authentication.getName());
         } else {
             logger.warn("⚠️ Nenhum token JWT encontrado no contexto de segurança.");
         }
