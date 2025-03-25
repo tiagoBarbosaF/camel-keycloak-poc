@@ -21,7 +21,9 @@ public class AuthenticationInterceptor implements Processor {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             exchange.getIn().setHeader("Authorization", "Bearer " + jwt.getTokenValue());
 
-            logger.info("✅ Usuário autenticado: {}", authentication.getName());
+            String clientId = authentication.getName();
+            Object clientName = jwt.getClaim("azp");
+            logger.info("✅ Usuário autenticado: {}, Cliente: {}", clientId, clientName);
         } else {
             logger.warn("⚠️ Nenhum token JWT encontrado no contexto de segurança.");
         }
